@@ -47,7 +47,7 @@ export class Comment {
 
     static listToHTML (comments) {
         return comments.length
-        ? `<ol>${comments.map(c=>`<li>${c.text}</li>`).join(' ')}</ol> `
+        ? `<ol>${comments.map(c=>`<li>${c.name}: ${c.text}</li>`).join(' ')}</ol> `
         : `<p>There are no comments</p>`
     }
 }
