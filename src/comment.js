@@ -1,7 +1,7 @@
 
 export class Comment {
     static create(comment) {
-        fetch('https://comment-form-app-default-rtdb.europe-west1.firebasedatabase.app/comment.json', {
+       return fetch('https://comment-form-app-default-rtdb.europe-west1.firebasedatabase.app/comment.json', {
             method: 'POST',
             body: JSON.stringify(comment),
             headers: {
@@ -27,6 +27,28 @@ export class Comment {
         const list = document.getElementById('list') 
 
         list.innerHTML = html
+    }
+    static fetch(token) {
+        if(!token) {
+            return Promise.resolve('<p class="error">Authentication Error, user not authorized.</p>')
+        }
+       return fetch(`https://comment-form-app-default-rtdb.europe-west1.firebasedatabase.app/comment.json?auth=${token}`,)
+        .then(response => response.json())
+        .then(response => {
+            if(response && response.error) {
+                return `<p class="error">${response.error}</p>`
+            }
+            return response ? Object.keys(response).map(key => ({
+                ...response[key],
+                id: key
+            })) : []
+        })
+    }
+
+    static listToHTML (comments) {
+        return comments.length
+        ? `<ol>${comments.map(c=>`<li>${c.text}</li>`).join(' ')}</ol> `
+        : `<p>There are no comments</p>`
     }
 }
 
